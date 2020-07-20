@@ -161,7 +161,7 @@ class Keywords(Cog):
 
     def clean_mentions(self, message: str) -> str:
         # remove the ! or & in mentions
-        return re.sub(r"<@.?([\d]+)>", r"<@\1>", message)
+        return re.sub(r"<@[!&]?([\d]+)>", r"<@\1>", message)
 
     @Cog.listener()
     async def on_member_join(self, member: Member) -> None:
@@ -191,7 +191,7 @@ class Keywords(Cog):
 
         # DEBUG PRINT
         for embed in message.embeds:
-            print(f'<{message.author.name}> {clean_mentions(embed.description)}')
+            print(f'<{message.author.name}> {self.clean_mentions(embed.description)}')
 
         # Get all users and their words in guild
         words = self.keywords.get_guild(message.guild.id)
@@ -212,7 +212,7 @@ class Keywords(Cog):
                     return
                 else:
                     for embed in message.embeds:
-                        if re.search(word, self.clean_mentions(embed.description), re.I):
+                        if re.search("(^|\W)" + re.escape(word) + "($|\W)", self.clean_mentions(embed.description), re.I):
                             print('we found a match in an embed!!!!')
                             await self._send_notification(int(user_id), message, embed.description, word)
                             return
