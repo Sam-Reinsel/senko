@@ -252,7 +252,7 @@ class Keywords(Cog):
             self.keywords.add_new_user(guilds, ctx.author.id)
 
         # Then we'll add the words for this user
-        words = [a.lower() for a in args]
+        words = [self.clean_mentions(a.lower()) for a in args]
         self.keywords.add_words(ctx.author.id, words)
         words = self.keywords.get_words(ctx.author.id)
         await self._send(ctx, words)
@@ -261,7 +261,7 @@ class Keywords(Cog):
     async def notify_rem(self, ctx: Context, *args: str) -> None:
         """Remove keywords from list."""
         log_command(ctx)
-        words = [a.lower() for a in args]
+        words = [self.clean_mentions(a.lower()) for a in args]
         self.keywords.remove_words(ctx.author.id, words)
         words = self.keywords.get_words(ctx.author.id)
         await self._send(ctx, words)
