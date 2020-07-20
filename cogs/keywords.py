@@ -213,12 +213,10 @@ class Keywords(Cog):
                 else:
                     for embed in message.embeds:
                         if re.search("(^|\W)" + re.escape(word) + "($|\W)", self.clean_mentions(embed.description), re.I):
-                            print('we found a match in an embed!!!!')
                             await self._send_notification(int(user_id), message, embed.description, word)
                             return
 
     async def _send_notification(self, user_id: int, message: Message, quote: str, word: str) -> None:
-        print('sending notif to user???????')
         # Get user to send message to
         user = self.bot.get_user(user_id)
 
