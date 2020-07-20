@@ -189,10 +189,6 @@ class Keywords(Cog):
         if message.guild is None:
             return
 
-        # DEBUG PRINT
-        for embed in message.embeds:
-            print(f'<{message.author.name}> {self.clean_mentions(embed.description)}')
-
         # Get all users and their words in guild
         words = self.keywords.get_guild(message.guild.id)
         for user_id in words.keys():
