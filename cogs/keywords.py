@@ -212,7 +212,7 @@ class Keywords(Cog):
                     return
                 else:
                     for embed in message.embeds:
-                        if re.search("word", self.clean_mentions(embed.description), re.I):
+                        if re.search(word, self.clean_mentions(embed.description), re.I):
                             print('we found a match in an embed!!!!')
                             await self._send_notification(int(user_id), message, embed.description, word)
                             return
