@@ -212,7 +212,8 @@ class Keywords(Cog):
                     break
                 else:
                     for embed in message.embeds:
-                        if re.search("(^|\W)" + re.escape(word) + "($|\W)", self.clean_mentions(embed.description), re.I):
+                        print(f'we are checking "{word}" in "{self.clean_mentions(embed.description)}"')
+                        if re.search("(^|\W)" + word + "($|\W)", self.clean_mentions(embed.description), re.I):
                             await self._send_notification(int(user_id), message, embed.description, word)
                             break
 
