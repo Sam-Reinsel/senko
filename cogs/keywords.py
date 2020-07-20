@@ -191,7 +191,7 @@ class Keywords(Cog):
 
         # DEBUG PRINT
         for embed in message.embeds:
-            print(f'<{message.author.name}> {embed.description}')
+            print(f'<{message.author.name}> {clean_mentions(embed.description)}')
 
         # Get all users and their words in guild
         words = self.keywords.get_guild(message.guild.id)
