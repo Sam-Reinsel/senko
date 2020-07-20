@@ -207,12 +207,12 @@ class Keywords(Cog):
 
             # Send notification if any words match in message or embed
             for word in words[user_id]:
-                if re.search("(^|\W)" + re.escape(word) + "($|\W)", clean_mentions(message.content), re.I):
+                if re.search("(^|\W)" + re.escape(word) + "($|\W)", self.clean_mentions(message.content), re.I):
                     await self._send_notification(int(user_id), message, message.clean_content, word)
                     break
                 else:
                     for embed in message.embeds:
-                        if re.search("(^|\W)" + re.escape(word) + "($|\W)", clean_mentions(embed.description), re.I):
+                        if re.search("(^|\W)" + re.escape(word) + "($|\W)", self.clean_mentions(embed.description), re.I):
                             await self._send_notification(int(user_id), message, embed.description, word)
                             break
 
@@ -252,7 +252,7 @@ class Keywords(Cog):
             self.keywords.add_new_user(guilds, ctx.author.id)
 
         # Then we'll add the words for this user
-        words = [clean_mentions(a.lower()) for a in args]
+        words = [self.clean_mentions(a.lower()) for a in args]
         self.keywords.add_words(ctx.author.id, words)
         words = self.keywords.get_words(ctx.author.id)
         await self._send(ctx, words)
