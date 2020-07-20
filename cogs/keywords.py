@@ -252,7 +252,7 @@ class Keywords(Cog):
             self.keywords.add_new_user(guilds, ctx.author.id)
 
         # Then we'll add the words for this user
-        words = [self.clean_mentions(a.lower()) for a in args]
+        words = [a.lower() for a in args]
         self.keywords.add_words(ctx.author.id, words)
         words = self.keywords.get_words(ctx.author.id)
         await self._send(ctx, words)
