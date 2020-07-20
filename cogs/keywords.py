@@ -159,6 +159,10 @@ class Keywords(Cog):
         self.bot = bot
         self.keywords = Database(bot.db)
 
+    def clean_mentions(self, message: str) -> str:
+        # remove the ! or & in mentions
+        return re.sub(r"<@.?([\d]+)>", r"<@\1>", message)
+
     @Cog.listener()
     async def on_member_join(self, member: Member) -> None:
         # print(f'{member.display_name} joined {member.guild.name}')
@@ -203,21 +207,21 @@ class Keywords(Cog):
 
             # Send notification if any words match in message or embed
             for word in words[user_id]:
-                if re.search("(^|\W)" + re.escape(word) + "($|\W)", message.content, re.I):
-                    await self._send_notification(int(user_id), message, word)
+                if re.search("(^|\W)" + re.escape(word) + "($|\W)", clean_mentions(message.content), re.I):
+                    await self._send_notification(int(user_id), message, message.clean_content, word)
                     break
                 else:
                     for embed in message.embeds:
-                        if re.search("(^|\W)" + re.escape(word) + "($|\W)", embed.description, re.I):
-                        await self._send_notification(int(user_id), embed.description, word)
-                        break
+                        if re.search("(^|\W)" + re.escape(word) + "($|\W)", clean_mentions(embed.description), re.I):
+                            await self._send_notification(int(user_id), message, embed.description, word)
+                            break
 
-    async def _send_notification(self, user_id: int, message: Message, word: str) -> None:
+    async def _send_notification(self, user_id: int, message: Message, quote: str, word: str) -> None:
         # Get user to send message to
         user = self.bot.get_user(user_id)
 
         # Escape backticks to avoid breaking output markdown
-        quote = message.clean_content.replace("`", "'")
+        quote = quote.replace("`", "'")
         
         # Send DM to user without formatting for push notification
         msg = await user.send(f"<{message.author.display_name}> {quote}")
@@ -248,7 +252,7 @@ class Keywords(Cog):
             self.keywords.add_new_user(guilds, ctx.author.id)
 
         # Then we'll add the words for this user
-        words = [a.lower() for a in args]
+        words = [clean_mentions(a.lower()) for a in args]
         self.keywords.add_words(ctx.author.id, words)
         words = self.keywords.get_words(ctx.author.id)
         await self._send(ctx, words)
