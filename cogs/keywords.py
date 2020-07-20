@@ -209,12 +209,12 @@ class Keywords(Cog):
             for word in words[user_id]:
                 if re.search("(^|\W)" + re.escape(word) + "($|\W)", self.clean_mentions(message.content), re.I):
                     await self._send_notification(int(user_id), message, message.clean_content, word)
-                    break
+                    return
                 else:
                     for embed in message.embeds:
                         if re.search("(^|\W)" + word + "($|\W)", self.clean_mentions(embed.description), re.I):
                             await self._send_notification(int(user_id), message, embed.description, word)
-                            break
+                            return
 
     async def _send_notification(self, user_id: int, message: Message, quote: str, word: str) -> None:
         print('sending notif to user???????')
